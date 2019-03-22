@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+
+<tiles-definitions>  
+ 
+   <!-- Base Definition -->
+   <definition name="base-definition" 
+       template="/WEB-INF/views/train/tiles/layouts/defaultLayout.jsp">  
+       <put-attribute name="title" value="타이틀" />  
+       <put-attribute name="header" value="/WEB-INF/views/train/tiles/template/defaultHeader.jsp" />  
+       <put-attribute name="menu" value="/WEB-INF/views/train/tiles/template/defaultMenu.jsp" />  
+       <put-attribute name="footer" value="/WEB-INF/views/train/tiles/template/defaultFooter.jsp" />  
+   </definition>
+ 
+   <!-- help -->
+   <definition name="help" extends="base-definition">  
+       <put-attribute name="title" value="Help" />  
+       <put-attribute name="body" value="/WEB-INF/views/train/view/help.jsp" />  
+   </definition>  
+      
+   <!-- Main -->
+   <definition name="main" extends="base-definition"> 
+       <put-attribute name="title" value="Main" />  
+       <put-attribute name="body" value="/WEB-INF/views/train/view/main.jsp" />  
+   </definition>  
+   
+   <!-- seat -->
+   <definition name="seat" extends="base-definition">  
+       <put-attribute name="title" value="Seat Select" />  
+       <put-attribute name="body" value="/WEB-INF/views/train/view/seat.jsp" />  
+   </definition>  
+</tiles-definitions>
