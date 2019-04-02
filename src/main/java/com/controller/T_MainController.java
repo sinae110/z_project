@@ -1,6 +1,13 @@
 package com.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.activation.CommandMap;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,7 +15,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.service.T_MainService;
 
 import annotation.maps.TestMappable;
@@ -23,10 +32,21 @@ public class T_MainController {
 
 	@Autowired
 	T_MainService tms;
-	
+
+	/*Ajax 테스트: db 쿼리문 넘기기*/
+	@RequestMapping(value = "/json.do", method=RequestMethod.POST) 
+	public @ResponseBody List<HashMap<String, String>> testJson() throws Exception {
+		
+	    List<HashMap<String, String>> resultList = trainMappable.selectlist();
+
+	    return resultList; 
+
+	}
 	
 	@RequestMapping(value = { "/help" }, method = RequestMethod.GET)
 	public String helpPage(ModelMap m) {
+		m.addAttribute("message", trainMappable.selectlist());
+		
 		return "help";
 	} 
 	
@@ -34,6 +54,7 @@ public class T_MainController {
 	public String trainMain(ModelMap m) throws Exception {
 		m.addAttribute("selectlist", trainMappable.selectlist());
 		m.addAttribute("stationInfo", trainMappable.stationInfo());
+		
 		return "main";
 	}
 	   

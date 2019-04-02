@@ -26,6 +26,23 @@
 		<script src="https://jsc.mm-lamp.com/jQuery-Seat-Charts/jquery.seat-charts.js"></script>
 		
 		<script>
+		$(document).ready(function(){
+	        $.ajax({
+	            type : "POST",
+	            url : "json.do",
+	            contentType : "application/json; charset=UTF-8",
+	            error : function(){
+	                alert('실패');
+	            },
+	            success : function(data){
+	                alert( "데이터 값 : " +JSON.stringify(data)) ;
+	              /*  $("#dataArea").html(data) ; */
+	            }
+	        });
+	    });
+
+
+		
 			var firstSeatLabel = 1;
 		
 			$(document).ready(function() {

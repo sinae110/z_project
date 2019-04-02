@@ -114,7 +114,6 @@ public class T_MainService {
 	/*각역간의 소요시간으로 기차 출발시간과 도착시간 구하기*/
 	public ArrayList<String> stationTimeAll(List<HashMap<String, String>> stTimelist, String startSt, String arrivalSt, String totalTime, String divTime) {
 		DateFormat f = new SimpleDateFormat("kk:mm");
-		String colName = "TS_TOTAL_TIMET";
 
 		ArrayList<String> station = new ArrayList<String>();	//소요시간 더해서 반환할 배열
 		int ttime = Integer.parseInt(totalTime);  	//소요시간
