@@ -14,6 +14,8 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vo.ticketingBean;
+
 import annotation.maps.TrainMappable;
 @Service
 public class T_MainService {
@@ -56,12 +58,12 @@ public class T_MainService {
 
 	
 	/*출발방향 정하기*/
-	public String startStation(String startSt, String arrivalSt, String colName) {
+	public String startStation(String startSt, String arrivalSt) {
 		/*소요시간 계산하기위해 int형으로 변환하기*/
 		int stst = Integer.parseInt(startSt); 
 		int arst = Integer.parseInt(arrivalSt); 
 		String total="";	//역간 최종소요시간
-		String startStaion=trainMappable.stationInfo_all(startSt).get(0).get(colName);
+		String startStaion=trainMappable.stationInfo_all(startSt).get(0).get("TS_TOTAL_TIMET");
 		if (stst < arst) {	//정방향일 때   
 			total=startStaion;	//DB에 있는 소요시간을 그대로 가져옴
 		} else if (stst > arst) {	//역방향일 때
@@ -72,45 +74,23 @@ public class T_MainService {
 		return total;
 	}   
 	
+	
+	/*스트링을 int로 반환하기*/
+	public int parseInt(String text) {
+		int parseInt=Integer.parseInt(text);
+		return parseInt;
+	}
+	
 	/*역간 차이 계산하기*/
-	public String StationDiv(String startSt, String arrivalSt, String colName) {
+	public String StationDiv(int startSt, int arrivalSt) {
 		/*소요시간 계산하기위해 int형으로 변환하기*/
 		String total="";	//역간 최종소요시간
-		int startStaion=Integer.parseInt(trainMappable.stationInfo_all(startSt).get(0).get(colName)); //출발역
-		int arrivalStaion=Integer.parseInt(trainMappable.stationInfo_all(arrivalSt).get(0).get(colName)); //도착역
-			int divTime = arrivalStaion-startStaion; //도착역 누적값에서 출발역 값 빼기
+			int divTime = arrivalSt-startSt; //도착역 누적값에서 출발역 값 빼기
 			total=Integer.toString(Math.abs(divTime)); //절대값으로 반환
-
 		return total;
 	}   
 	
 	
-	/*각역간의 소요시간으로 기차 출발시간 구하기
-	public ArrayList<String> stationTime(String[] firstTime, String startSt, String arrivalSt) {
-		DateFormat f = new SimpleDateFormat("kk:mm");
-		//firstTime = {"2018-03-19 06:00", "2018-03-19 08:00", "2018-03-19 10:00"};
-		
-		String totalTime=startStation(startSt, arrivalSt); //역이름으로 소요시간 가져오기
-
-		ArrayList<String> station = new ArrayList<String>();	//소요시간 더해서 반환할 배열
-		int ttime = Integer.parseInt(totalTime);  	//소요시간
-            
-		try {
-			Calendar cal = Calendar.getInstance();
-	    	for(int i=0; i<firstTime.length; i++) {
-	        Date date = f.parse(firstTime[i]);
-	        
-	        cal.setTime(date);
-	        cal.add(Calendar.MINUTE, ttime);	//날짜 더하기
-	        station.add(f.format(cal.getTime())); 	//배열에 담기
-	        //System.out.println(f.format(cal.getTime()));
-	    	}
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	    }
-	    return station;
-	}
-	*/
 	/*각역간의 소요시간으로 기차 출발시간과 도착시간 구하기*/
 	public ArrayList<String> stationTimeAll(List<HashMap<String, String>> stTimelist, String startSt, String arrivalSt, String totalTime, String divTime) {
 		DateFormat f = new SimpleDateFormat("kk:mm");

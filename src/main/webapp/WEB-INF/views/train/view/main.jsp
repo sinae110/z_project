@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <head>
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -18,22 +19,9 @@
   } );
   </script>
    <style>
-    #maintable {margin-top:1%;}
-    li { list-style: none }
-	tab {padding-left: 4em;}
-	space {padding-left: 1em;}
+   
 	th,td {text-align:center;}
-    #train_search {height:45px; width:90px; color:white; background-color:#1F2358;}
-    #nav-content {margin:4% 0% 10% 0%; }
-    #pagebutton {text-align:center; margin:5% 5%}
-    #center {text-align:center;}
-    #datepicker {width:120px;}
 
-    .company {color:#103590; font-weight:bold;}
-    .period {color:gray;}
-	.previous {background-color: #f1f1f1; color: black;}
-	.next {background-color: #4CAF50; color: white;}
-	.round {border-radius: 50%;}
    </style>
 </head>
 <body>
@@ -97,7 +85,7 @@
 		</div>  
 	  </div>	
 	  </form>
-  <form name='seatSelectfrm' method='GET' action='seat'>
+
   <table class="table" id="maintable">
     <thead>
       <tr>
@@ -115,20 +103,23 @@
      <c:set var = "St_name" value = "${startSt[0].TS_NAME}"/>
      <c:set var = "Arv_name" value = "${arrivalSt[0].TS_NAME}"/>
      <c:forEach var="i" items="${startTimearr}" varStatus="status"> 
+     <form:form commandName="ticketingBean" name="seatSelectfrm" method='GET' action='seat'>   
         <tr>
 			<td>${i.TT_TRAINNUM}</td>
-			<td>${St_name}</td>
-			<td>${Arv_name}</td>
-			<td><input type="button" class="btn btn-warning" id="ticketing" value="좌석예매" onclick="ticketingSubmit();" /></td>
+			<td>${St_name}<input type="hidden" name="ttList[${status.index}].st_name" value="${St_name}"></td>
+			<td>${Arv_name}<input type="hidden" name="ttList[${status.index}].arv_name" value="${Arv_name}"></td>
+			<td><input type="button" class="btn btn-warning" id="ticketing" value="좌석예매" onclick="ticketingSubmit(${status.index});" /></td>
 			<td>${fare_adult}원</td>
-			<td>${startTimelist[status.index]}</td>
-			<td>${arrivalTime[status.index]}</td>
-			<td>${howlongTime}분</td>
+			<td>${startTimelist[status.index]}<input type="hidden" name="ttList[${status.index}].startTimelist" value="${startTimelist[status.index]}"></td>
+			<td>${arrivalTime[status.index]}<input type="hidden" name="ttList[${status.index}].arrivalTime" value="${arrivalTime[status.index]}"></td>
+			<td>${howlongTime}분<input type="hidden" name="ttList[${status.index}].howlongTime" value="${howlongTime}"></td>
 	  	</tr>    
+	</form:form> 		
     </c:forEach> 
     </tbody>
+   
  </table>
- </form>
+
 </div>  
 <script>
 /* 출발지와 도착역이 동일할 경우 감추기 */
@@ -154,8 +145,10 @@ function arrivalst_Option() {
 		});
 	}
 	
-function ticketingSubmit() {
-	document.seatSelectfrm.submit();
+function ticketingSubmit(index) {
+	var frm = document.seatSelectfrm[index];
+	//alert(frm)
+	frm.submit();
 	}
 	
 /* 셀렉트박스 유효성 검사 */

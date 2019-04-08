@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.activation.CommandMap;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.service.T_MainService;
+import com.vo.ticketingBean;
 
 import annotation.maps.TestMappable;
 import annotation.maps.TrainMappable;
@@ -65,30 +67,34 @@ public class T_MainController {
 		m.addAttribute("startSt", trainMappable.stationInfo_all(start_station));	//사용자가 선택한 출발역
 		m.addAttribute("arrivalSt", trainMappable.stationInfo_all(arrival_station));	//사용자가 선택한 도착역
 		
+		/*요일별 열차시간표*/
 		String day=tms.getDateDay(datepicker, "yy/MM/dd");
-		m.addAttribute("startTimearr", trainMappable.stTime_alllist(day));	//요일별 시간표
+		m.addAttribute("startTimearr", trainMappable.stTime_alllist(day));	
 		
-		String colName="";  
-		colName="TS_TOTAL_TIMET";
-		String stationDiv=tms.StationDiv(start_station, arrival_station, colName);
-		m.addAttribute("howlongTime", stationDiv); 
+		/*역간 소요시간*/
+		int time_from_startSt = tms.parseInt(trainMappable.stationInfo_time(start_station));
+		int time_from_arvSt = tms.parseInt(trainMappable.stationInfo_time(arrival_station));
+		String howlongTime=tms.StationDiv(time_from_startSt, time_from_arvSt);
+		m.addAttribute("howlongTime", howlongTime); 
 		
-		String totalTime=tms.startStation(start_station, arrival_station, colName); //출발역까지 소요시간가져오기
+		/*진행방향에따른 운행시간*/
+		String totalTime=tms.startStation(start_station, arrival_station); //출발역까지 소요시간가져오기
 		m.addAttribute("startTimelist", tms.stationTimeAll(trainMappable.stTime_alllist(day), start_station, arrival_station, totalTime, "0"));	//출발시간
-   
-		m.addAttribute("arrivalTime", tms.stationTimeAll(trainMappable.stTime_alllist(day), start_station, arrival_station, totalTime, stationDiv)); //도착시간
-		   
-		colName="TS_FARE_ADULT";
-		m.addAttribute("fare_adult", tms.StationDiv(start_station, arrival_station, colName)); //요금
-		
+		m.addAttribute("arrivalTime", tms.stationTimeAll(trainMappable.stTime_alllist(day), start_station, arrival_station, totalTime, howlongTime)); //도착시간
+
+		/*역간 요금*/
+		int fare_from_startSt = tms.parseInt(trainMappable.stationInfo_fare(start_station));
+		int fare_from_arvSt = tms.parseInt(trainMappable.stationInfo_fare(arrival_station));
+		m.addAttribute("fare_adult", tms.StationDiv(fare_from_startSt, fare_from_arvSt)); 
 		
 		return "main";
 	}     
-	  
+	
 	@RequestMapping(value = { "/seat" }, method = RequestMethod.GET)
-	public String seat(ModelMap m) {
+	public String seat(ModelMap m, ticketingBean tb, HttpServletRequest request) {
 		m.addAttribute("selectlist", trainMappable.selectlist());
-		return "seat";
+		m.addAttribute("tb", tb.getTtList());
+		return "seat"; 
 	}
 	
 }

@@ -29,6 +29,15 @@ public interface TrainMappable {
 	@Select("SELECT * FROM T_STATION_INFO WHERE TS_CODE=#{stationCode}")
 	public List<HashMap<String, String>> stationInfo_all(String stationCode);
 	
+	/* 기차코드로 소요시간 반환하기*/
+	@Select("SELECT TS_TOTAL_TIMET FROM T_STATION_INFO WHERE TS_CODE=#{stationCode}")
+	public String stationInfo_time(String stationCode);
+	
+	/* 기차코드로 요금 반환하기*/
+	@Select("SELECT TS_FARE_ADULT FROM T_STATION_INFO WHERE TS_CODE=#{stationCode}")
+	public String stationInfo_fare(String stationCode);
+	
+	
 	/* 기차의 최종 종착역의 소요시간 반환하기: 역방향 소요시간계산*/
 	@Select("SELECT TS_TOTAL_TIMET FROM T_STATION_INFO WHERE TS_CODE = (SELECT max(TS_CODE) FROM T_STATION_INFO)")
 	public String lastSt_time(String startSt, String arrivalSt);

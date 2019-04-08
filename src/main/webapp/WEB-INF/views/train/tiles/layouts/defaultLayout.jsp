@@ -40,6 +40,18 @@ bottom: 0;
 }
 
 
+ 	#maintable {margin-top:1%;}
+    li { list-style: none }
+	tab {padding-left: 4em;}
+	space {padding-left: 1em;}
+    #train_search {height:45px; width:90px; color:white; background-color:#1F2358;}
+    #nav-content {margin:4% 0% 10% 0%; }
+    #pagebutton {text-align:center; margin:5% 5%}
+    #center {text-align:center;}
+    #datepicker {width:120px;}
+
+	#ticketInfo {font-weight:bold; font-size:1.2em; margin-top:20px;}
+
 .bg-1 {
 	background-color: #1abc9c; /* Green */
 	color: #ffffff;

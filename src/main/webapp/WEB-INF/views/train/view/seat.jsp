@@ -1,12 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
 	<link rel="stylesheet" type="text/css" href="https://jsc.mm-lamp.com/jQuery-Seat-Charts/jquery.seat-charts.css">    
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/seat_style.css"> 
 		<div class="wrapper">
 			<div class="container">
+				<div id="ticketInfo">
+					<c:forEach items="${tb}" var="list" >  
+					${list.startTimelist} 
+					${list.st_name} 
+					</c:forEach> ->
+					<c:forEach items="${tb}" var="list" >  
+					${list.arv_name}
+					</c:forEach> 
+				</div>
+				
 				<div id="seat-map">
 					<div class="front-indicator">Front</div>
-				
 				</div>
 				<div class="booking-details">
 					<h2>예약 상세정보</h2>
@@ -35,8 +45,11 @@
 	                alert('실패');
 	            },
 	            success : function(data){
-	                alert( "데이터 값 : " +JSON.stringify(data)) ;
-	              /*  $("#dataArea").html(data) ; */
+	                alert( "데이터 값 : " +JSON.stringify(data, ["T_TIME"])) ;
+	              /* console.log(JSON.stringify(target, function(key, value){
+    return key !== "age" ? value : undefined;
+}));
+ */
 	            }
 	        });
 	    });
@@ -122,7 +135,7 @@
 				});
 
 				//let's pretend some seats have already been booked
-				sc.get(['1_2', '4_1', '7_1', '7_2']).status('unavailable');
+				sc.get(['1_2', '4_1']).status('unavailable');
 		
 		});
 
